@@ -1,0 +1,36 @@
+https://venam.nixers.net
+https://jichu4n.com/posts/how-x-window-managers-work-and-how-to-write-one-part-i/
+https://xcb.freedesktop.org/manual/group__XCB__Core__API.html
+https://www.hack.org/mc/projects/
+
+https://www.x.org/releases/current/doc/man/man3/xcb-requests.3.xhtml
+https://xcb.freedesktop.org/windowcontextandmanipulation/
+
+https://specifications.freedesktop.org/wm-spec/wm-spec-1.3.html
+---------
+#keyboard keycode
+xorg-xev
+-
+panning and crtc
+---
+# /etc/mkinitcpio.conf
+MODULES=(nouveau)
+------
+each tty may have one Xorg session.
+one Xorg session have on display.
+display == screens + keyboard + mouse
+screen == hardware monitor
+one screen may have many windows.
+------
+XCB_CW_OVERRIDE_REDIRECT
+
+The override-redirect specifies whether map and configure requests on this window should override a SubstructureRedirect on the parent, typically to inform a window manager not to tamper with the window
+--
+run xpro >output.txt and click on any winodw to fech the proproties of this winodw.
+------
+A8 52 x 74 mm
+A4 210 x 297 mm
+
+# window states
+_NET_WM_STATE_HIDDEN
+https://standards.freedesktop.org/wm-spec/wm-spec-1.3.html
