@@ -1,5 +1,4 @@
 digraph ports {
-    { rank=same;note}
     { rank=same;n0;n3;n5}
     { rank=same;n1;}
     splines=polyline;
