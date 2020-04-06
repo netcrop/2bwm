@@ -43,25 +43,6 @@ digraph ports {
             <td port="2" bgcolor="beige"></td>
         </tr>
     </table>>];
-    note [shape=none,margin=0,label=<
-    <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
-        <tr>
-            <td colspan="2" bgcolor="white">Path Name</td>
-        </tr>
-        <tr>
-            <td colspan="2" bgcolor="lightseagreen">current<br/>workspace</td>
-        </tr>
-        <tr>
-            <td colspan="2" bgcolor="lightgrey">unkillable</td>
-        </tr>
-        <tr>
-            <td colspan="2" bgcolor="steelblue">fixed</td>
-        </tr>
-        <tr>
-            <td colspan="2" bgcolor="beige">recycle</td>
-        </tr>
-    </table>>];
-
     n0:1 -> n1:1 [arrowhead=normal,color=lightseagreen;weight=10;];
     n1:2 -> n0:2 [arrowhead=normal,color=lightseagreen;weight=10];
     n3:1:s -> n3:2:s [arrowhead=normal,color=lightgrey;weight=10];
