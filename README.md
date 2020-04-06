@@ -34,7 +34,7 @@ xcb-util-keysyms
 > 2bwm.build
 ```
 ## For developers
-![delete window 1](misc/data.png?raw=true "")
+![delete window 1](misc/data1.png?raw=true "")
 ![delete window 2](misc/data2.png?raw=true "")
 
 The purpose of test cases are for verifying each existing features and should be executed and passed.
