@@ -49,5 +49,5 @@ digraph ports {
     n3:1:s -> n3:2:s [arrowhead=normal,color=lightgrey;weight=10];
     n3:2:s -> n3:1:s [arrowhead=normal,color=lightgrey;weight=10];
 label = "When adding new window, 2bwm recycle a node from recycle-path
-and add it to current workspace-path";
+and link it to current workspace-path";
 }

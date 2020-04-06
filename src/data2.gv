@@ -49,5 +49,5 @@ digraph ports {
     n5:1:s -> n5:2:s [arrowhead=normal,color=beige;weight=10];
     n5:2:s -> n5:1:s [arrowhead=normal,color=beige;weight=10];
 label = "When deleting window No.2, 2bwm remove it from all three paths
-and add it to recycle-path as well.";
+and link it to recycle-path as well.";
 }
