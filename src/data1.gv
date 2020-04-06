@@ -1,7 +1,6 @@
 digraph ports {
-    { rank=same;note}
-    { rank=same;n0;n3;n5}
-    { rank=same;n1;n2;n4}
+    { rank=same;n0;n3;n5;note}
+    { rank=same;n1;n2;n4;}
     splines=polyline;
     n0 [shape=none,margin=0,label=<
     <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
@@ -66,7 +65,7 @@ digraph ports {
     note [shape=none,margin=0,label=<
     <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
         <tr>
-            <td colspan="2" bgcolor="white">Path Name</td>
+            <td colspan="2" bgcolor="white">Node Id</td>
         </tr>
         <tr>
             <td colspan="2" bgcolor="lightseagreen">current<br/>workspace</td>

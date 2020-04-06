@@ -29,7 +29,7 @@ digraph ports {
             <td port="2" bgcolor="lightseagreen"></td>
         </tr>
         <tr>
-            <td colspan="2">3</td>
+            <td colspan="2">2</td>
         </tr>
     </table>>];
     n3 [shape=none,margin=0,label=<
