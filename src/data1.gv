@@ -1,0 +1,94 @@
+digraph ports {
+    { rank=same;note}
+    { rank=same;n0;n3;n5}
+    { rank=same;n1;n2;n4}
+    splines=polyline;
+    n0 [shape=none,margin=0,label=<
+    <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr>
+            <td colspan="2">0</td>
+        </tr>
+        <tr>
+            <td port="1" bgcolor="lightseagreen"></td>
+            <td port="2" bgcolor="lightseagreen"></td>
+        </tr>
+    </table>>];
+    n1 [shape=none,margin=0,label=<
+    <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr>
+            <td port="1" bgcolor="lightseagreen"></td>
+            <td port="2" bgcolor="lightseagreen"></td>
+        </tr>
+        <tr>
+            <td colspan="2">1</td>
+        </tr>
+    </table>>];
+    n2 [shape=none,margin=0,label=<
+    <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr>
+            <td port="1" bgcolor="lightseagreen"></td>
+            <td port="2" bgcolor="lightseagreen"></td>
+        </tr>
+        <tr>
+            <td colspan="2">2</td>
+        </tr>
+    </table>>];
+    n3 [shape=none,margin=0,label=<
+    <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr>
+            <td colspan="2">0</td>
+        </tr>
+        <tr>
+            <td port="1" bgcolor="lightgrey"></td>
+            <td port="2" bgcolor="lightgrey"></td>
+        </tr>
+    </table>>];
+    n4 [shape=none,margin=0,label=<
+    <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr>
+            <td port="1" bgcolor="lightgrey"></td>
+            <td port="2" bgcolor="lightgrey"></td>
+        </tr>
+        <tr>
+            <td colspan="2">2</td>
+        </tr>
+    </table>>];
+    n5 [shape=none,margin=0,label=<
+    <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr>
+            <td colspan="2">2</td>
+        </tr>
+        <tr>
+            <td port="1" bgcolor="steelblue"></td>
+            <td port="2" bgcolor="steelblue"></td>
+        </tr>
+    </table>>];
+    note [shape=none,margin=0,label=<
+    <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr>
+            <td colspan="2" bgcolor="white">Path Name</td>
+        </tr>
+        <tr>
+            <td colspan="2" bgcolor="lightseagreen">current<br/>workspace</td>
+        </tr>
+        <tr>
+            <td colspan="2" bgcolor="lightgrey">unkillable</td>
+        </tr>
+        <tr>
+            <td colspan="2" bgcolor="steelblue">fixed</td>
+        </tr>
+        <tr>
+            <td colspan="2" bgcolor="beige">recycle</td>
+        </tr>
+    </table>>];
+
+    n0:1 -> n1:1 [arrowhead=normal,color=lightseagreen;weight=10;];
+    n1:2 -> n2:1 [arrowhead=normal,color=lightseagreen;weight=10];
+    n2:2 -> n0:2 [arrowhead=normal,color=lightseagreen;weight=10];
+    n3:1 -> n4:1 [arrowhead=normal,color=lightgrey;weight=10];
+    n4:2 -> n3:2 [arrowhead=normal,color=lightgrey;weight=10];
+    n5:1:s -> n5:2:s [arrowhead=normal,color=steelblue;weight=10];
+    n5:2:s -> n5:1:s [arrowhead=normal,color=steelblue;weight=10];
+label = "Three windows [0,1,2] are linked to current workspace-path.
+two [0,2] to unkillable-path and one [2] to fixed-path.";
+}
