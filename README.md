@@ -33,11 +33,13 @@ xcb-util-keysyms
 # build archlinux package
 > 2bwm.build
 ```
-## For developers
+## Data structure
 ![delete window 1](misc/data1.png?raw=true "")
 ![delete window 2](misc/data2.png?raw=true "")
 ![add window](misc/data3.png?raw=true "")
 
+## Testing
+The test scripts inside test folder are a form of blackbox testing that simulate the behaviour of keyboard and mouse activities.
 The purpose of test cases are for verifying each existing features and should be executed and passed.
 Each pull request with new features should come together with new test cases. 
 ```
@@ -46,6 +48,8 @@ Each pull request with new features should come together with new test cases.
 # Execute 2bwm.verify from a application launcher e.g: [dmenu] [rofi]
 # Test cases will occupy first and second workspaces on your display.
 ```
+You may also optionally using ![stimy](netcrop/stimy/?raw=true "") to generate run-time call-grap has a tool for the source code level whitebox testing.  
+
 ## Releases:
 **arch** is the latest developing **branch**.
 each **release** tag will be created from this **branch**.
