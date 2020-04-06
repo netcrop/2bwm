@@ -44,11 +44,12 @@ The purpose of test cases are for verifying each existing features and should be
 Each pull request with new features should come together with new test cases. 
 ```
 # Install test script.
+> source test/tsuit1.sh
 > 2bwm.fun2script 2bwm.verify
 # Execute 2bwm.verify from a application launcher e.g: [dmenu] [rofi]
 # Test cases will occupy first and second workspaces on your display.
 ```
-You may also optionally using ![stimy](netcrop/stimy/?raw=true "") to generate run-time call-grap has a tool for the source code level whitebox testing.  
+You may also optionally using [stimy](https://github.com/netcrop/stimy/tree/master) to generate run-time call-grap has a tool for the source code level whitebox testing.  
 
 ## Releases:
 **arch** is the latest developing **branch**.

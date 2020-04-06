@@ -41,27 +41,6 @@
     tmpbindir=/var/tmp/
     \builtin source <($cat<<-SUB
 
-2bwm.fun2script()
-{
-    local usage="[fun][opt user:group][opt u=X,g=Y,o=Z]"
-    local fun=\${1:?\$usage}
-    local usrgrp=\${2:-"\$USER:users"}
-    local perm=\${3:-'ug=rx,o='}
-    local arg='\$@'
-    local script="$bindir/\${fun}"
-    \builtin declare -F \$fun >/dev/null ||\
-    { printf "%s\n" "\$FUNCNAME: \$fun not defined."; return; }
-    local tmpfile=\$($mktemp)
-    $sudo $rm -f \${script}
-    $cat <<-BASHFUN2SCRIPT > \${tmpfile}
-#!$env $bash
-\$(\builtin declare -f \${fun})
-\${fun} \${arg}
-BASHFUN2SCRIPT
-    $sudo $mv \${tmpfile} \${script}
-    $sudo $chmod \${perm} \${script}
-    $sudo $chown \${usrgrp} \${script}
-}
 2bwm.verify()
 {
     # These test cases should no be executed from a terminal.
