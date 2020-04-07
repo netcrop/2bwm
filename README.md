@@ -50,7 +50,7 @@ workspace=[0-9]
 > 2bwm.testinstall test/tsuit1.sh
 # Execute 2bwm.verify using keyboard: [Super + Shift + v]
 ```
-You may also optionally using [stimy](https://github.com/netcrop/stimy) to generate run-time call-graph has a tool for the source code level whitebox testing.  
+You may also optionally using [stimy](https://github.com/netcrop/stimy) to generate run-time call-graph as a tool for the source code level whitebox testing.  
 
 ## Releases:
 **arch** is the latest developing **branch**.
