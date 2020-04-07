@@ -39,13 +39,15 @@
     tmpbindir=/var/tmp/
     \builtin source <($cat<<-SUB
 
-2bwm.fun2script()
+2bwm.testinstall()
 {
-    local usage="[fun][opt user:group][opt u=X,g=Y,o=Z]"
-    local fun=\${1:?\$usage}
-    local usrgrp=\${2:-"\$USER:users"}
-    local perm=\${3:-'ug=rx,o='}
+    local usage="[test/tsuitX.sh file]"
+    local input=\${1:?\$usage}
+    local fun='2bwm.verify'
+    local usrgrp="\$USER:users"
+    local perm='ug=rx,o='
     local script="$bindir/\${fun}"
+    \builtin source \${input} || return
     \builtin declare -F \$fun >/dev/null ||\
     { printf "%s\n" "\$FUNCNAME: \$fun not defined."; return; }
     local tmpfile=\$($mktemp)
