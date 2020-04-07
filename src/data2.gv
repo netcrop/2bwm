@@ -48,6 +48,6 @@ digraph ports {
     n3:2:s -> n3:1:s [arrowhead=normal,color=lightgrey;weight=10];
     n5:1:s -> n5:2:s [arrowhead=normal,color=beige;weight=10];
     n5:2:s -> n5:1:s [arrowhead=normal,color=beige;weight=10];
-label = "When deleting window No.2, 2bwm remove it from all three paths
-and link it to recycle-path as well.";
+label = "When user deleting window No.2, instead of removing and delocate,
+2bwm unlink it from all three paths and link it to recycle-path.";
 }

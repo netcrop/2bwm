@@ -54,7 +54,7 @@
     $cat <<-BASHFUN2SCRIPT > \${tmpfile}
 #!$env $bash
 \$(\builtin declare -f \${fun})
-\${fun} \${arg}
+\${fun}
 BASHFUN2SCRIPT
     $sudo $mv \${tmpfile} \${script}
     $sudo $chmod \${perm} \${script}

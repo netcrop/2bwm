@@ -3,13 +3,10 @@
     local reslist devlist libdir includedir bindir cmd i perl_version \
     tmpbindir vendor_perl \
     cmdlist='dirname basename cat ls mv sudo cp chmod ln chown rm touch
-    head mkdir perl mktemp shred egrep sed less date env bash'
+    head mkdir perl mktemp shred egrep sed less date env bash
+    xdotool sleep gtk-demo'
 
     declare -A Devlist=(
-        [xdotool]=xdotool
-        [sleep]=sleep
-        [gtk-demo]=gtk-demo
-        [makepkg]=makepkg
     )
     cmdlist="${Devlist[@]} $cmdlist"
     for cmd in $cmdlist;do
@@ -385,7 +382,7 @@
     $cat <<-2BWMVERIFY > ${tmpbindir}/\${fun}
 #!$env $bash
 \$(\builtin declare -f \${fun})
-\${fun} '\$@'
+\${fun}
 2BWMVERIFY
     \builtin unset -f \${fun}
     $chmod u=rwx ${tmpbindir}/\${fun}

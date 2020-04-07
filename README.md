@@ -2,7 +2,7 @@
 
 ## 2bwm:
 A fast floating Window Manager using XCB. 
-This repo is based on a fork from ![2bwm](https://github.com/venam/2bwm).
+This repo is based on a fork from [2bwm](https://github.com/venam/2bwm).
 With a new data structure, more features have been developed.
 
 ## New Features:
@@ -49,7 +49,7 @@ Each pull request with new features should come together with new test cases.
 # Execute 2bwm.verify from a application launcher e.g: [dmenu] [rofi]
 # Test cases will occupy first and second workspaces on your display.
 ```
-You may also optionally using [stimy](https://github.com/netcrop/stimy/tree/master) to generate run-time call-grap has a tool for the source code level whitebox testing.  
+You may also optionally using [stimy](https://github.com/netcrop/stimy) to generate run-time call-graph has a tool for the source code level whitebox testing.  
 
 ## Releases:
 **arch** is the latest developing **branch**.

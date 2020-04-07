@@ -3,13 +3,10 @@
     local reslist devlist libdir includedir bindir cmd i perl_version \
     tmpbindir vendor_perl \
     cmdlist='dirname basename cat ls mv sudo cp chmod ln chown rm touch
-    head mkdir perl mktemp shred egrep sed less date env bash'
+    head mkdir perl mktemp shred egrep sed less date env bash xdotool sleep
+    gtk-demo figlet seq'
 
     declare -A Devlist=(
-        [xdotool]=xdotool
-        [sleep]=sleep
-        [gtk-demo]=gtk-demo
-        [makepkg]=makepkg
     )
     cmdlist="${Devlist[@]} $cmdlist"
     for cmd in $cmdlist;do
@@ -46,32 +43,45 @@
     # These test cases should no be executed from a terminal.
     # They will occupy workspace 1 and 2.
     declare -a Tests=(
-    2bwm.verify1   
+        2bwm.verify1
     )
+    2bwm.figlet()
+    {
+        local input=\${1:-2}
+        $figlet -f block \${input}
+    }
     2bwm.verify1()
     {
-        # 
-        $sleep 1
-        $xdotool key super+1
-        $sleep 1
-        $xdotool key super+ctrl+8
-        $sleep 1
-        $xdotool key super+p
-        $sleep 1
+        local timer='0.3'
+        $xdotool sleep 1 key super+7
+        for i in \$($seq 6);do
+            $xdotool sleep \${timer} key super+Return
+            $xdotool sleep \${timer} key super+ctrl+8
+            $xdotool sleep \${timer} type "PS1=''"
+            $xdotool key --clearmodifiers --delay 0 Return Ctrl+l 
+           $xdotool sleep \${timer} type --clearmodifiers "$figlet -f block \$'\n'\${i}"
+            $xdotool key --delay 0 Return
+        done
+        $xdotool sleep \${timer} key super+s
+        $xdotool sleep \${timer} key super+j
+        $xdotool sleep \${timer} key super+ctrl+Tab   
+        $xdotool sleep \${timer} key super+j super+j
+        $xdotool sleep \${timer} key super+Tab
+        $xdotool sleep \${timer} key super+j
+        $xdotool sleep \${timer} key super+ctrl+Tab   
+        $xdotool sleep \${timer} key super+j super+j
+
+        $xdotool sleep \${timer} key super+s
+        $xdotool sleep \${timer} key super+s
+        $xdotool sleep \${timer} key super+Tab
+        $xdotool sleep \${timer} key super+s
+        $xdotool sleep \${timer} key super+s
+        $xdotool sleep \${timer} key super+shift+o
+        $xdotool sleep \${timer} key super+p
     }
-    local fun
-    set -o xtrace
-    for fun in \${Tests[@]};do
-    $cat <<-2BWMVERIFY > ${tmpbindir}/\${fun}
-#!$env $bash
-\$(\builtin declare -f \${fun})
-\${fun} '\$@'
-2BWMVERIFY
-    \builtin unset -f \${fun}
-    $chmod u=rwx ${tmpbindir}/\${fun}
-    ${tmpbindir}/\${fun}
-    $rm -f ${tmpbindir}/\${fun}
-    done
+    set +o xtrace
+    \${Tests[@]}
+    \builtin unset -f \${Tests[@]}
     set +o xtrace
 }
 SUB
