@@ -38,7 +38,6 @@
     tmpbindir=/var/tmp/
     outputdir=/var/tmp/2bwm/
     workspace=7
-    mkdir -p ${outputdir}
     \builtin source <($cat<<-SUB
 
 2bwm.verify()
@@ -48,45 +47,46 @@
     declare -a Tests=(
         2bwm.verify1
     )
-    2bwm.printscreen()
+    2bwm.record()
     {
-        local index=\${1:?[output file index]}
-        local output=${outputdir}/\${index}.jpg
-        $import -crop "800x600+1520+780" -window root -screen \${output}  
-    }
-    2bwm.terminal()
-    {
-        $urxvt -geometry '20x15+1760+840' &
+        $xdotool \${@}
+        $import -colorspace gray -crop "800x600+1520+780" -window root \
+        -screen ${outputdir}/\${RANDOM}\${RANDOM}.jpg 
     }
     2bwm.verify1()
     {
-        local timer='0.3' total=6 index=0
+        local i timer='0.3' total=6
         $xdotool sleep 1 key super+${workspace}
-        for index in \$($seq \${total});do
-            2bwm.terminal
-            $xdotool sleep \${timer} key super+ctrl+8
+        $mkdir -p ${outputdir}
+        $rm -f ${outputdir}/*.jpg
+        for i in \$($seq \${total});do
+            $xdotool sleep \${timer} key super+Return
+            $xdotool sleep \${timer} key super+Ctrl+8
+            $xdotool sleep \${timer} key super+space
+            $xdotool sleep \${timer} key super+y
             $xdotool sleep \${timer} type "PS1=''"
             $xdotool key --clearmodifiers --delay 0 Return Ctrl+l 
            $xdotool sleep \${timer} type --clearmodifiers "$figlet -f block \$'\n'\${i}"
             $xdotool key --delay 0 Return
+            2bwm.record sleep \${timer} key super+k
         done
-        $xdotool sleep \${timer} key super+s
-        $xdotool sleep \${timer} key super+j
-        $xdotool sleep \${timer} key super+ctrl+Tab   
-        $xdotool sleep \${timer} key super+j super+j
-        $xdotool sleep \${timer} key super+Tab
-        $xdotool sleep \${timer} key super+j
-        $xdotool sleep \${timer} key super+ctrl+Tab   
-        $xdotool sleep \${timer} key super+j super+j
+        2bwm.record sleep \${timer} key super+s
+        2bwm.record sleep \${timer} key super+j
+        2bwm.record sleep \${timer} key super+ctrl+Tab   
+        2bwm.record sleep \${timer} key super+j super+j
+        2bwm.record sleep \${timer} key super+Tab
+        2bwm.record sleep \${timer} key super+j
+        2bwm.record sleep \${timer} key super+ctrl+Tab   
+        2bwm.record sleep \${timer} key super+j super+j
 
-        $xdotool sleep \${timer} key super+s
-        $xdotool sleep \${timer} key super+s
-        $xdotool sleep \${timer} key super+Tab
-        $xdotool sleep \${timer} key super+s
-        $xdotool sleep \${timer} key super+s
+        2bwm.record sleep \${timer} key super+s
+        2bwm.record sleep \${timer} key super+s
+        2bwm.record sleep \${timer} key super+Tab
+        2bwm.record sleep \${timer} key super+s
+        2bwm.record sleep \${timer} key super+s
 
         for i in \$($seq \${total});do
-            $xdotool sleep \${timer} key super+p
+            2bwm.record sleep \${timer} key super+p
         done
     }
     set +o xtrace

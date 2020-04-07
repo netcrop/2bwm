@@ -65,7 +65,7 @@ static const char *ignore_names[] = {"bar", "xclock"};
 ///--Menus and Programs---//
 static const char *menucmd[] = { "/usr/local/bin/menu", NULL };
 static const char *testcmd[] = { "/usr/local/bin/2bwm.verify", NULL };
-static const char *termcmd[] = { "/bin/urxvt","-b","40","+sb","-lsp","8","-g","90x40+1400+600", NULL };
+static const char *termcmd[] = { "/bin/urxvt","-b","40","+sb","-lsp","8","-g","90x40+1400+300", NULL };
 ///--Custom foo---///
 static void halfandcentered(const Arg *arg)
 {
