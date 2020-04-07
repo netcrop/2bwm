@@ -1,10 +1,10 @@
 2bwm.substitute()
 {
     local reslist devlist libdir includedir bindir cmd i perl_version \
-    tmpbindir vendor_perl \
+    tmpbindir outputdir vendor_perl \
     cmdlist='dirname basename cat ls mv sudo cp chmod ln chown rm touch
     head mkdir perl mktemp shred egrep sed less date env bash xdotool sleep
-    gtk-demo figlet seq'
+    gtk-demo figlet seq magick import'
 
     declare -A Devlist=(
     )
@@ -36,7 +36,9 @@
     includedir=/usr/local/include/
     bindir=/usr/local/bin/
     tmpbindir=/var/tmp/
+    outputdir=/var/tmp/2bwm/
     workspace=7
+    mkdir -p ${outputdir}
     \builtin source <($cat<<-SUB
 
 2bwm.verify()
@@ -46,15 +48,16 @@
     declare -a Tests=(
         2bwm.verify1
     )
-    2bwm.figlet()
+    2bwm.printscreen()
     {
-        local input=\${1:-2}
-        $figlet -f block \${input}
+        local index=\${1:?[output file index]}
+        local output=${outputdir}/\${index}.jpg
+        $import -crop "800x600+1520+780" -window root -screen \${output}  
     }
     2bwm.verify1()
     {
         local i timer='0.3' total=6
-        $xdotool sleep 1 key super+${workspace}
+        $xdotool sleep 1 key super+${workspace} index=0
         for i in \$($seq \${total});do
             $xdotool sleep \${timer} key super+Return
             $xdotool sleep \${timer} key super+ctrl+8
