@@ -60,9 +60,9 @@
     }
     2bwm.verify1()
     {
-        local i timer='0.3' total=6
-        $xdotool sleep 1 key super+${workspace} index=0
-        for i in \$($seq \${total});do
+        local timer='0.3' total=6 index=0
+        $xdotool sleep 1 key super+${workspace}
+        for index in \$($seq \${total});do
             2bwm.terminal
             $xdotool sleep \${timer} key super+ctrl+8
             $xdotool sleep \${timer} type "PS1=''"
@@ -88,6 +88,7 @@
         for i in \$($seq \${total});do
             $xdotool sleep \${timer} key super+p
         done
+        2bwm.printscreen \${index}
     }
     set +o xtrace
     \${Tests[@]}
