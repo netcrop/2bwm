@@ -4,7 +4,7 @@
     tmpbindir outputdir vendor_perl \
     cmdlist='dirname basename cat ls mv sudo cp chmod ln chown rm touch
     head mkdir perl mktemp shred egrep sed less date env bash xdotool sleep
-    gtk-demo figlet seq magick import'
+    gtk-demo figlet seq magick import urxvt'
 
     declare -A Devlist=(
     )
@@ -53,6 +53,10 @@
         local index=\${1:?[output file index]}
         local output=${outputdir}/\${index}.jpg
         $import -crop "800x600+1520+780" -window root -screen \${output}  
+    }
+    2bwm.terminal()
+    {
+        $urxvt -geometry '20x15+1760+840'
     }
     2bwm.verify1()
     {
