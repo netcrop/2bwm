@@ -47,8 +47,7 @@ Each pull request with new features should come together with new test cases.
 by editing file test/tsuitX.sh.
 workspace=[0-9]
 # Install test script.
-> source test/tsuit1.sh
-> 2bwm.fun2script 2bwm.verify
+> 2bwm.testinstall test/tsuit1.sh
 # Execute 2bwm.verify using keyboard: [Super + Shift + v]
 ```
 You may also optionally using [stimy](https://github.com/netcrop/stimy) to generate run-time call-graph has a tool for the source code level whitebox testing.  
