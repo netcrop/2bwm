@@ -45,7 +45,6 @@
     local fun=\${1:?\$usage}
     local usrgrp=\${2:-"\$USER:users"}
     local perm=\${3:-'ug=rx,o='}
-    local arg='\$@'
     local script="$bindir/\${fun}"
     \builtin declare -F \$fun >/dev/null ||\
     { printf "%s\n" "\$FUNCNAME: \$fun not defined."; return; }

@@ -36,6 +36,7 @@
     includedir=/usr/local/include/
     bindir=/usr/local/bin/
     tmpbindir=/var/tmp/
+    workspace=7
     \builtin source <($cat<<-SUB
 
 2bwm.verify()
@@ -53,7 +54,7 @@
     2bwm.verify1()
     {
         local i timer='0.3' total=6
-        $xdotool sleep 1 key super+7
+        $xdotool sleep 1 key super+${workspace}
         for i in \$($seq \${total});do
             $xdotool sleep \${timer} key super+Return
             $xdotool sleep \${timer} key super+ctrl+8
