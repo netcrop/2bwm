@@ -56,14 +56,14 @@
     }
     2bwm.terminal()
     {
-        $urxvt -geometry '20x15+1760+840'
+        $urxvt -geometry '20x15+1760+840' &
     }
     2bwm.verify1()
     {
         local i timer='0.3' total=6
         $xdotool sleep 1 key super+${workspace} index=0
         for i in \$($seq \${total});do
-            $xdotool sleep \${timer} key super+Return
+            2bwm.terminal
             $xdotool sleep \${timer} key super+ctrl+8
             $xdotool sleep \${timer} type "PS1=''"
             $xdotool key --clearmodifiers --delay 0 Return Ctrl+l 
