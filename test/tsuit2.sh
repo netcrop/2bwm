@@ -88,7 +88,6 @@
         for i in \$($seq \${total});do
             $xdotool sleep \${timer} key super+p
         done
-        2bwm.printscreen \${index}
     }
     set +o xtrace
     \${Tests[@]}
