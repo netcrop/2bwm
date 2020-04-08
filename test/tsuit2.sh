@@ -4,7 +4,7 @@
     tmpbindir outputdir vendor_perl \
     cmdlist='dirname basename cat ls mv sudo cp chmod ln chown rm touch
     head mkdir perl mktemp shred egrep sed less date env bash xdotool sleep
-    gtk-demo figlet seq magick import urxvt'
+    gtk-demo figlet seq magick import urxvt convert'
 
     declare -A Devlist=(
     )
@@ -42,11 +42,46 @@
 
 2bwm.verify()
 {
-    # These test cases should no be executed from a terminal.
-    # They will occupy workspace 1 and 2.
+    \builtin \trap "2bwm.verify.delocate" SIGHUP SIGTERM SIGINT
     declare -a Tests=(
         2bwm.verify1
     )
+    declare -a Tfuns=(
+        2bwm.record
+        2bwm.verify.delocate
+        2bwm.convert.multi-image
+        2bwm.renamebytime
+    )
+    2bwm.verify.delocate()
+    {
+        \builtin unset -f \${Tests[@]}
+        \builtin unset -f \${Tfuns[@]}
+        \builtin unset Tests Tfuns
+        \builtin \trap - SIGHUP SIGTERM SIGINT
+        set +o xtrace
+    }
+    2bwm.convert.multi-image()
+    {
+        local dir=\${1:?[input dir][output gif image]}
+        local output=\${2:?[output gif image]}
+        [[ -d \${dir} ]] || return
+        (
+            \builtin cd \${dir}
+            $convert -delay 100 \$($ls -1 --time=birth --reverse) \${output} 
+        )
+    }
+    2bwm.renamebytime()
+    {
+        local i suffix j=0 dir=\${1:?[dir with image files]}
+        [[ -d \${dir} ]] || return
+        (
+            \builtin cd \${dir}
+            for i in \$($ls -1 --time=birth --reverse);do
+                suffix=\${i##*.}
+                $mv -f \${i} "\$((j++)).\${suffix}" 
+            done
+        )    
+    }
     2bwm.record()
     {
         $xdotool \${@}
@@ -58,7 +93,8 @@
         local i timer='0.3' total=6
         $xdotool sleep 1 key super+${workspace}
         $mkdir -p ${outputdir}
-        $rm -f ${outputdir}/*.jpg
+        $rm -f ${outputdir}/*
+        
         for i in \$($seq \${total});do
             $xdotool sleep \${timer} key super+Return
             $xdotool sleep \${timer} key super+Ctrl+8
@@ -89,10 +125,11 @@
             2bwm.record sleep \${timer} key super+p
         done
     }
-    set +o xtrace
     \${Tests[@]}
-    \builtin unset -f \${Tests[@]}
-    set +o xtrace
+    2bwm.renamebytime ${outputdir}
+#    set -o xtrace
+    2bwm.convert.multi-image ${outputdir} /tmp/tsuit2.gif
+    2bwm.verify.delocate
 }
 SUB
 )
