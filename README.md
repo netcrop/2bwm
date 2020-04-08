@@ -45,7 +45,7 @@ Each pull request with new features should come together with new test cases.
 ```
 # Predefine which workspace will be occupied for test cases
 by editing file test/tsuitX.sh.
-workspace=[0-9]
+ws_alpha=[0-9]
 # Install test script.
 > 2bwm.testinstall test/tsuit1.sh
 # Execute 2bwm.verify using keyboard: [Super + Shift + v]

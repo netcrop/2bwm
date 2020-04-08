@@ -4,7 +4,7 @@
     tmpbindir outputdir vendor_perl \
     cmdlist='dirname basename cat ls mv sudo cp chmod ln chown rm touch
     head mkdir perl mktemp shred egrep sed less date env bash xdotool sleep
-    gtk-demo figlet seq magick import urxvt convert'
+    gtk-demo figlet seq magick import urxvt convert display xsetroot'
 
     declare -A Devlist=(
     )
@@ -51,7 +51,23 @@
         2bwm.verify.delocate
         2bwm.convert.multi-image
         2bwm.renamebytime
+        2bwm.setrootwindow
     )
+    2bwm.setrootwindow()
+    {
+        local text=\${1}
+        local tmpfile=/tmp/\${RANDOM}
+        if [[ -z \${text} ]];then
+            $xsetroot -default
+            return
+        fi
+        \builtin printf "text 15,15 \"" > \${tmpfile}
+        $figlet -f block \${text} >> \${tmpfile}
+        \builtin printf "\"" >> \${tmpfile}
+        $convert -size 160x160 xc:black -fill white -draw "@\${tmpfile}" \${tmpfile}.png
+        $display -window root \${tmpfile}.png
+        $rm -f \${tmpfile} \${tmpfile}.png
+    }
     2bwm.verify.delocate()
     {
         \builtin unset -f \${Tests[@]}
@@ -90,8 +106,9 @@
     }
     2bwm.verify1()
     {
-        local i timer='0.3' total=6
+        local i timer='0.3' total=6 outputimage="/tmp/\${RANDOM}.png"
         $xdotool sleep 1 key super+${workspace}
+        2bwm.setrootwindow ${workspace}
         $mkdir -p ${outputdir}
         $rm -f ${outputdir}/*
         
@@ -124,6 +141,7 @@
         for i in \$($seq \${total});do
             2bwm.record sleep \${timer} key super+p
         done
+        2bwm.setrootwindow
     }
     \${Tests[@]}
     2bwm.renamebytime ${outputdir}
