@@ -64,7 +64,8 @@ static const uint8_t borders[] = {3,5,5,4};
 static const char *ignore_names[] = {"bar", "xclock"};
 ///--Menus and Programs---//
 static const char *menucmd[] = { "/usr/local/bin/menu", NULL };
-static const char *termcmd[] = { "/bin/urxvt","-b","40","+sb","-lsp","8","-g","90x40+1400+600", NULL };
+static const char *testcmd[] = { "/usr/local/bin/2bwm.verify", NULL };
+static const char *termcmd[] = { "/bin/urxvt","-b","40","+sb","-lsp","8","-g","90x40+1400+300", NULL };
 ///--Custom foo---///
 static void halfandcentered(const Arg *arg)
 {
@@ -188,8 +189,8 @@ static key keys[] = {
 //    {  MOD ,              XK_v,          nextworkspace,     {}},
 //    {  MOD ,              XK_c,          prevworkspace,     {}},
 // Move to Next/Previous workspace
-{  MOD |SHIFT ,       XK_v,          sendtonextworkspace,{}},
-{  MOD |SHIFT ,       XK_c,          sendtoprevworkspace,{}},
+// {  MOD |SHIFT ,       XK_v,          sendtonextworkspace,{}},
+// {  MOD |SHIFT ,       XK_c,          sendtoprevworkspace,{}},
 // Iconify the window
 // Make the window unkillable
 {  MOD ,              XK_a,          unkillablewin,        {}},
@@ -209,6 +210,7 @@ static key keys[] = {
 {  MOD |SHIFT,        XK_Left,       cursor_move,       {.i=TWOBWM_CURSOR_LEFT}},
 // Start programs
 {  MOD ,              XK_Return,     start,             {.com = termcmd}},
+{  MOD |SHIFT,        XK_v,          start,             {.com = testcmd}},
 {  MOD ,              XK_w,          start,             {.com = termcmd}},
 {  MOD ,              XK_m,          start,             {.com = menucmd}},
 {  MOD ,              XK_o,          selectwindows,     {.i=TWOBWM_SELECT}},

@@ -39,6 +39,28 @@
     tmpbindir=/var/tmp/
     \builtin source <($cat<<-SUB
 
+2bwm.testinstall()
+{
+    local usage="[test/tsuitX.sh file]"
+    local input=\${1:?\$usage}
+    local fun='2bwm.verify'
+    local usrgrp="\$USER:users"
+    local perm='ug=rx,o='
+    local script="$bindir/\${fun}"
+    \builtin source \${input} || return
+    \builtin declare -F \$fun >/dev/null ||\
+    { printf "%s\n" "\$FUNCNAME: \$fun not defined."; return; }
+    local tmpfile=\$($mktemp)
+    $sudo $rm -f \${script}
+    $cat <<-BASHFUN2SCRIPT > \${tmpfile}
+#!$env $bash
+\$(\builtin declare -f \${fun})
+\${fun}
+BASHFUN2SCRIPT
+    $sudo $mv \${tmpfile} \${script}
+    $sudo $chmod \${perm} \${script}
+    $sudo $chown \${usrgrp} \${script}
+}
 2bwm.graphviz()
 {
     local input=\${1:?[input gv file]}
@@ -65,6 +87,9 @@ original/
 pkg/
 src/2bwm
 src/hidden
+src/.*
+test/.*
+misc/.*
 .*
 *.o
 2bwm

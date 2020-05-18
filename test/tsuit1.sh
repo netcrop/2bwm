@@ -3,13 +3,10 @@
     local reslist devlist libdir includedir bindir cmd i perl_version \
     tmpbindir vendor_perl \
     cmdlist='dirname basename cat ls mv sudo cp chmod ln chown rm touch
-    head mkdir perl mktemp shred egrep sed less date env bash'
+    head mkdir perl mktemp shred egrep sed less date env bash
+    xdotool sleep gtk-demo figlet convert xsetroot display'
 
     declare -A Devlist=(
-        [xdotool]=xdotool
-        [sleep]=sleep
-        [gtk-demo]=gtk-demo
-        [makepkg]=makepkg
     )
     cmdlist="${Devlist[@]} $cmdlist"
     for cmd in $cmdlist;do
@@ -39,33 +36,18 @@
     includedir=/usr/local/include/
     bindir=/usr/local/bin/
     tmpbindir=/var/tmp/
+    ws_alpha=7
+    ws_beta=8
+    ws_gamma=9
+    ws_delta=5
+    ws_epsilon=6
+    timer='0.5'
     \builtin source <($cat<<-SUB
 
-2bwm.fun2script()
-{
-    local usage="[fun][opt user:group][opt u=X,g=Y,o=Z]"
-    local fun=\${1:?\$usage}
-    local usrgrp=\${2:-"\$USER:users"}
-    local perm=\${3:-'ug=rx,o='}
-    local arg='\$@'
-    local script="$bindir/\${fun}"
-    \builtin declare -F \$fun >/dev/null ||\
-    { printf "%s\n" "\$FUNCNAME: \$fun not defined."; return; }
-    local tmpfile=\$($mktemp)
-    $sudo $rm -f \${script}
-    $cat <<-BASHFUN2SCRIPT > \${tmpfile}
-#!$env $bash
-\$(\builtin declare -f \${fun})
-\${fun} \${arg}
-BASHFUN2SCRIPT
-    $sudo $mv \${tmpfile} \${script}
-    $sudo $chmod \${perm} \${script}
-    $sudo $chown \${usrgrp} \${script}
-}
 2bwm.verify()
 {
-    # These test cases should no be executed from a terminal.
-    # They will occupy workspace 1 and 2.
+    \builtin \trap "2bwm.verify.delocate" SIGHUP SIGTERM SIGINT
+    local i
     declare -a Tests=(
     2bwm.verify1   
     2bwm.verify2
@@ -74,346 +56,298 @@ BASHFUN2SCRIPT
     2bwm.verify5
     2bwm.verify6
     )
+    declare -a Tfuns=(2bwm.figlet 2bwm.setrootwindow)
+    2bwm.verify.delocate()
+    {
+        \builtin unset -f \${Tests[@]}
+        \builtin unset -f \${Tfuns[@]}
+        \builtin unset Tests Tfuns
+        \builtin \trap - SIGHUP SIGTERM SIGINT
+        set +o xtrace
+    }
+    2bwm.setrootwindow()
+    {
+        local text=\${1}
+        local tmpfile=/tmp/\${RANDOM}
+        if [[ -z \${text} ]];then 
+            $xsetroot -default
+            return
+        fi
+        \builtin printf "text 15,15 \"" > \${tmpfile}
+        $figlet -f block \${text} >> \${tmpfile}
+        \builtin printf "\"" >> \${tmpfile}
+        $convert -size 160x160 xc:black -fill white -draw "@\${tmpfile}" \${tmpfile}.png
+        $display -window root \${tmpfile}.png
+        $rm -f \${tmpfile} \${tmpfile}.png
+    }
     2bwm.verify6()
     {
-        # Verify cross workspace selection/move
-        $sleep 1
-        # change workspace
-        $xdotool key super+1
-        $sleep 1
-        $xdotool key super+w
-        $sleep 1
-        $xdotool key 1
-        $sleep 1
-        $xdotool key super+g 
-        $sleep 1
-        # change workspace
-        $xdotool key super+2
-        $sleep 1
-        $xdotool key super+w
-        $sleep 1
-        $xdotool key 2
-        $sleep 1
-        $xdotool key super+ctrl+g 
-        $sleep 1
-        # change workspace
-        $xdotool key super+3
-        $sleep 1
-        $xdotool key super+w
-        $sleep 1
-        $xdotool key 3
-        $sleep 1
-        $xdotool key super+n 
-        $sleep 1
-        # change workspace
-        $xdotool key super+4
-        $sleep 1
-        $xdotool key super+w
-        $sleep 1
-        $xdotool key 4
-        $xdotool key super+ctrl+n
-        $sleep 1
-        $xdotool key super+o
-        $sleep 1
-        $xdotool key super+3
-        $sleep 1
-        $xdotool key super+o
-        $sleep 1
-        $xdotool key super+2
-        $sleep 1
-        $xdotool key super+o
-        $sleep 1
-        $xdotool key super+1
-        $sleep 1
-        $xdotool key super+o
-        $sleep 1
-        # move
-        $xdotool key super+shift+5
-        $sleep 1
-        $xdotool key super+5
+        # Verify cross ws_alpha selection/move
+        # change ws_alpha
+        $xdotool sleep ${timer} key super+${ws_alpha}
+        2bwm.setrootwindow ${ws_alpha}
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet ${ws_alpha}
+        $xdotool sleep ${timer} key super+g 
+        # change ws_alpha
+        $xdotool sleep ${timer} key super+${ws_beta}
+        2bwm.setrootwindow ${ws_beta}
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet ${ws_beta}
+        $xdotool sleep ${timer} key super+ctrl+g 
+        # change ws_alpha
+        $xdotool sleep ${timer} key super+${ws_gamma}
+        2bwm.setrootwindow ${ws_gamma}
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet ${ws_gamma}
+        $xdotool sleep ${timer} key super+n 
+        # change ws_alpha
+        $xdotool sleep ${timer} key super+${ws_epsilon}
+        2bwm.setrootwindow ${ws_epsilon}
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet ${ws_epsilon}
+        $xdotool sleep ${timer} key super+ctrl+n
+        $xdotool sleep ${timer} key super+o
+        $xdotool sleep ${timer} key super+${ws_gamma}
+        2bwm.setrootwindow ${ws_gamma}
+        $xdotool sleep ${timer} key super+o
+        $xdotool sleep ${timer} key super+${ws_beta}
+        2bwm.setrootwindow ${ws_beta}
+        $xdotool sleep ${timer} key super+o
+        $xdotool sleep ${timer} key super+${ws_alpha}
+        2bwm.setrootwindow ${ws_alpha}
+        $xdotool sleep ${timer} key super+o
+        # move to ws_delta
+        $xdotool sleep ${timer} key super+shift+${ws_delta}
+        $xdotool sleep ${timer} key super+${ws_delta}
+        2bwm.setrootwindow ${ws_delta}
         # selectall
-        $xdotool key super+shift+o
-        $sleep 1
+        $xdotool sleep ${timer} key super+shift+o
         #  deletewin
-        $xdotool key super+p
-        $sleep 2
+        $xdotool sleep ${timer} key super+p
+        2bwm.setrootwindow
     } 
     2bwm.verify5()
     {
-        $sleep 1
         # Verify hide/unhide
-        # change workspace
-        $xdotool key super+1
-        $sleep 1
+        # change ws_alpha
+        $xdotool sleep ${timer} key super+${ws_alpha}
+        2bwm.setrootwindow ${ws_alpha}
         # newwin, teleporting
-        $xdotool key super+w
-        $sleep 1
-        $xdotool key 1
-        $sleep 1
-        $xdotool key --delay 500 super+g 
-        $xdotool key super+w
-        $sleep 1
-        $xdotool key 2
-        $sleep 1
-        $xdotool key --delay 500 super+ctrl+g 
-        $xdotool key super+w
-        $sleep 1
-        $xdotool key 3
-        $sleep 1
-        $xdotool key --delay 500 super+n 
-        $xdotool key super+w
-        $sleep 1
-        $xdotool key 4
-        $xdotool key --delay 500 super+ctrl+n
-        $sleep 2
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 1
+        $xdotool sleep ${timer} key --delay 500 super+g 
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 2
+        $xdotool sleep ${timer} key --delay 500 super+ctrl+g 
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 3
+        $xdotool sleep ${timer} key --delay 500 super+n 
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 4
+        $xdotool sleep ${timer} key --delay 500 super+ctrl+n
         # selectwin
-        $xdotool key super+o
-        $sleep 1
-        $xdotool key super+Tab
+        $xdotool sleep ${timer} key super+o
+        $xdotool sleep ${timer} key super+Tab
         # selectwin
-        $xdotool key super+o
-        $sleep 1
+        $xdotool sleep ${timer} key super+o
         # hide
-        $xdotool key super+i
-        $sleep 1
+        $xdotool sleep ${timer} key super+i
         # unhide
-        $xdotool key super+shift+i
-        $sleep 1
+        $xdotool sleep ${timer} key super+shift+i
         # selectall
-        $xdotool key super+shift+o
-        $sleep 1
+        $xdotool sleep ${timer} key super+shift+o
         #  deletewin
-        $xdotool key super+p
-        $sleep 2
+        $xdotool sleep ${timer} key super+p
+        2bwm.setrootwindow
     } 
     2bwm.verify4()
     {
-        $sleep 1
         # Verify sidebyside
-        # change workspace
-        $xdotool key super+1
-        $sleep 1
+        # change ws_alpha
+        $xdotool sleep ${timer} key super+${ws_alpha}
+        2bwm.setrootwindow ${ws_alpha}
         # newwin, teleporting
-        $xdotool key super+w
-        $sleep 1
-        $xdotool key 1
-        $sleep 1
-        $xdotool key super+w
-        $sleep 1
-        $xdotool key 2
-        $sleep 1
-        $xdotool key super+w
-        $sleep 1
-        $xdotool key 3
-        $sleep 1
-        $xdotool key super+w
-        $sleep 1
-        $xdotool key 4
-        $sleep 2
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 1
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 2
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 3
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 4
         # selectall
-        $xdotool key super+shift+o
-        $sleep 1
+        $xdotool sleep ${timer} key super+shift+o
         # resize a8
-        $xdotool key super+ctrl+8
-        $sleep 1
+        $xdotool sleep ${timer} key super+ctrl+8
         # sidebyside
-        $xdotool key super+s
-        $sleep 1
+        $xdotool sleep ${timer} key super+s
         # focuswin,focuslocationwin
-        $xdotool key super+Tab
-        $sleep 1
+        $xdotool sleep ${timer} key super+Tab
         # focuswin,focuslocationwin
-        $xdotool key super+ctrl+Tab
-        $sleep 1
+        $xdotool sleep ${timer} key super+ctrl+Tab
         # focuswin,focuslocationwin
-        $xdotool key super+Tab
-        $sleep 1
+        $xdotool sleep ${timer} key super+Tab
         # focuswin,focuslocationwin
-        $xdotool key super+ctrl+Tab
-        $sleep 1
+        $xdotool sleep ${timer} key super+ctrl+Tab
         # swapwin
-        $xdotool key super+shift+s
-        $sleep 1
+        $xdotool sleep ${timer} key super+shift+s
         # focuswin,focuslocationwin
-        $xdotool key super+ctrl+Tab
-        $sleep 1
+        $xdotool sleep ${timer} key super+ctrl+Tab
         # focuswin,focuslocationwin
-        $xdotool key super+ctrl+Tab
-        $sleep 1
+        $xdotool sleep ${timer} key super+ctrl+Tab
         # focuswin,focuslocationwin
-        $xdotool key super+ctrl+Tab
-        $sleep 1
+        $xdotool sleep ${timer} key super+ctrl+Tab
         # selectall
-        $xdotool key super+shift+o
-        $sleep 1
+        $xdotool sleep ${timer} key super+shift+o
         #  deletewin
-        $xdotool key super+p
-        $sleep 2
+        $xdotool sleep ${timer} key super+p
+        2bwm.setrootwindow
     } 
     2bwm.verify3()
     {
-        $sleep 1
-        # Verify workspace focus 
-        # change workspace
-        $xdotool key super+1
-        $sleep 1
+        # Verify ws_alpha focus 
+        # change ws_alpha
+        $xdotool sleep ${timer} key super+${ws_alpha}
+        2bwm.setrootwindow ${ws_alpha}
         # newwin, teleporting
-        $xdotool key super+w 1
-        $xdotool key --delay 500 super+g 
-        $xdotool key super+w 2
-        $xdotool key --delay 500 super+ctrl+g 
-        $xdotool key super+w 3
-        $xdotool key --delay 500 super+n 
-        $xdotool key super+w 4
-        $xdotool key --delay 500 super+ctrl+n 
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 1
+        $xdotool sleep ${timer} key super+g 
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 2
+        $xdotool sleep ${timer} key super+ctrl+g 
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 3
+        $xdotool sleep ${timer} key super+n 
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 4
+        $xdotool sleep ${timer} key super+ctrl+n 
         # focuswin,focuslocationwin
-        $xdotool key super+Tab
-        $sleep 2
-        # changeworkspace
-        $xdotool key super+2
-        $sleep 1
+        $xdotool sleep ${timer} key super+Tab
+        # changews_alpha
+        $xdotool sleep ${timer} key super+${ws_beta}
+        2bwm.setrootwindow ${ws_beta}
         # newwin, teleporting
-        $xdotool key super+w 5
-        $xdotool key --delay 500 super+g 
-        $xdotool key super+w 6
-        $xdotool key --delay 500 super+ctrl+g 
-        $xdotool key super+w 7
-        $xdotool key --delay 500 super+n 
-        $xdotool key super+w 8
-        $xdotool key --delay 500 super+ctrl+n 
-        $sleep 2
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 5
+        $xdotool sleep ${timer} key super+g 
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 6
+        $xdotool sleep ${timer} key super+ctrl+g 
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 7
+        $xdotool sleep ${timer} key super+n 
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 8
+        $xdotool sleep ${timer} key super+ctrl+n 
         # focuswin,focuslocationwin
-        $xdotool key super+Tab
-        $sleep 1
-        # changeworkspace
-        $xdotool key super+1
-        $sleep 1
+        $xdotool sleep ${timer} key super+Tab
+        # changews_alpha
+        $xdotool sleep ${timer} key super+${ws_alpha}
+        2bwm.setrootwindow ${ws_alpha}
         # focuswin,focuslocationwin
-        $xdotool key super+Tab
-        $sleep 1
-        # changeworkspace
-        $xdotool key super+2
-        $sleep 1
+        $xdotool sleep ${timer} key super+Tab
+        # changews_alpha
+        $xdotool sleep ${timer} key super+${ws_beta}
+        2bwm.setrootwindow ${ws_beta}
         # focuswin,focuslocationwin
-        $xdotool key super+ctrl+Tab
-        $sleep 1
-        # changeworkspace
-        $xdotool key super+1
-        $sleep 1
+        $xdotool sleep ${timer} key super+ctrl+Tab
+        # changews_alpha
+        $xdotool sleep ${timer} key super+${ws_alpha}
+        2bwm.setrootwindow ${ws_alpha}
         # focuswin,focuslocationwin
-        $xdotool key super+ctrl+Tab
-        $sleep 1
-        # changeworkspace
-        $xdotool key super+2
-        $sleep 1
+        $xdotool sleep ${timer} key super+ctrl+Tab
+        # changews_alpha
+        $xdotool sleep ${timer} key super+${ws_beta}
+        2bwm.setrootwindow ${ws_beta}
         # selectall
-        $xdotool key super+shift+o
-        $sleep 1
+        $xdotool sleep ${timer} key super+shift+o
         #  deletewin
-        $xdotool key super+p
-        $sleep 1
-      # changeworkspace
-        $xdotool key super+1
-        $sleep 1
+        $xdotool sleep ${timer} key super+p
+        # changews_alpha
+        $xdotool sleep ${timer} key super+${ws_alpha}
+        2bwm.setrootwindow ${ws_alpha}
         # selectall
-        $xdotool key super+shift+o
-        $sleep 1
+        $xdotool sleep ${timer} key super+shift+o
         #  deletewin
-        $xdotool key super+p
-        $sleep 2
+        $xdotool sleep ${timer} key super+p
+        2bwm.setrootwindow
+    }
+    2bwm.figlet()
+    {
+        $xdotool sleep ${timer} type --clearmodifiers "PS1=''" 
+        $xdotool key --clearmodifiers --delay 0 Return Ctrl+l 
+        $xdotool sleep ${timer} type --clearmodifiers "$figlet -f block \${@}"
+        $xdotool key --delay 0 Return
     }
     2bwm.verify1()
     {
-        $sleep 1
-        # verify newwin, teleport,send/change workspace
-        $xdotool key super+1
-        $sleep 1
+        # verify newwin, teleport,send/change ws_alpha
+        $xdotool sleep ${timer} key super+${ws_alpha}
+        2bwm.setrootwindow ${ws_alpha}
         # newwin, teleporting
-        $xdotool key super+w 1
-        $xdotool key --delay 500 super+g 
-        $xdotool key super+w 2
-        $xdotool key --delay 500 super+ctrl+g 
-        $xdotool key super+w 3
-        $xdotool key --delay 500 super+n 
-        $xdotool key super+w 4
-        $xdotool key --delay 500 super+ctrl+n 
-        $sleep 2
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 1
+        $xdotool sleep ${timer} key super+g
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 2
+        $xdotool sleep ${timer} key super+ctrl+g 
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 3
+        $xdotool sleep ${timer} key super+n 
+        $xdotool sleep ${timer} key super+w
+        2bwm.figlet 4
+        $xdotool sleep ${timer} key super+ctrl+n 
         # focuswin,focuslocationwin
-        $xdotool key super+Tab
-        $sleep 1
-        $xdotool key super+ctrl+Tab
-        $sleep 1
-        $xdotool key super+Tab
-        $sleep 1
-        $xdotool key super+ctrl+Tab
-        $sleep 2
-        # sendtoworkspace
-        $xdotool key super+shift+2
-        $sleep 1
-        # changetoworkspace
-        $xdotool key super+2
-        $sleep 1
-        # changetoworkspace
-        $xdotool key super+1
-        $sleep 1
+        $xdotool sleep ${timer} key super+Tab
+        $xdotool sleep ${timer} key super+ctrl+Tab
+        $xdotool sleep ${timer} key super+Tab
+        $xdotool sleep ${timer} key super+ctrl+Tab
+        # sendtows_alpha
+        $xdotool sleep ${timer} key super+shift+${ws_beta}
+        # changetows_alpha
+        $xdotool sleep ${timer} key super+${ws_beta}
+        2bwm.setrootwindow ${ws_beta}
+        # changetows_alpha
+        $xdotool sleep ${timer} key super+${ws_alpha}
+        2bwm.setrootwindow ${ws_alpha}
         # multi-select
-        $xdotool key super+shift+o
-        $sleep 1
-        # sendtoworkspace
-        $xdotool key super+shift+2
-        $sleep 1
-        # changetoworkspace
-        $xdotool key super+2
-        $sleep 1
+        $xdotool sleep ${timer} key super+shift+o
+        # sendtows_alpha
+        $xdotool sleep ${timer} key super+shift+${ws_beta}
+        # changetows_alpha
+        $xdotool sleep ${timer} key super+${ws_beta}
+        2bwm.setrootwindow ${ws_beta}
         # multi-select
-        $xdotool key super+shift+o
-        $sleep 1
+        $xdotool sleep ${timer} key super+shift+o
         #  deletewin
-        $xdotool key super+p
-        $sleep 2
+        $xdotool sleep ${timer} key super+p
+        $xsetroot -default
     }
     2bwm.verify2()
     {
         # verify X11 app
-        $sleep 1
-        $xdotool key super+1
-        $sleep 1
+        $xdotool sleep ${timer} key super+${ws_alpha}
+        2bwm.setrootwindow ${ws_alpha}
         # gtk-demo
         $gtk_demo &
-        $sleep 1
-        $xdotool key Up Return
-        $sleep 1
+        $xdotool sleep ${timer} key Up Return
         # movestep
-        $xdotool key --delay 1000 super+l
-        $sleep 1
-        $xdotool key alt+f
-        $sleep 1
-        $xdotool key Return
-        $sleep 1
-        $xdotool key Return
-        $sleep 1
-        $xdotool key super+Tab
-        $sleep 1
+        $xdotool sleep ${timer} key --delay 1000 super+l
+        $xdotool sleep ${timer} key alt+f
+        $xdotool sleep ${timer} key Return
+        $xdotool sleep ${timer} key Return
+        $xdotool sleep ${timer} key super+Tab
         #  deletewin
-        $xdotool key super+p
-        $sleep 1
-        $xdotool key super+p
-        $sleep 1
+        $xdotool sleep ${timer} key super+p
+        $xdotool sleep ${timer} key super+p
+        2bwm.setrootwindow
     }
-    local fun
-    set -o xtrace
-    for fun in \${Tests[@]};do
-    $cat <<-2BWMVERIFY > ${tmpbindir}/\${fun}
-#!$env $bash
-\$(\builtin declare -f \${fun})
-\${fun} '\$@'
-2BWMVERIFY
-    \builtin unset -f \${fun}
-    $chmod u=rwx ${tmpbindir}/\${fun}
-    ${tmpbindir}/\${fun}
-    $rm -f ${tmpbindir}/\${fun}
+    for i in \${Tests[@]};do
+        \${i}
     done
-    set +o xtrace
+    2bwm.verify.delocate
 }
 SUB
 )

@@ -1,6 +1,6 @@
 digraph ports {
-    { rank=same;n0;n3;n5}
-    { rank=same;n1;}
+    { rank=same;n0;n3;}
+    { rank=same;n1;n2}
     splines=polyline;
     n0 [shape=none,margin=0,label=<
     <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
@@ -22,6 +22,16 @@ digraph ports {
             <td colspan="2">1</td>
         </tr>
     </table>>];
+    n2 [shape=none,margin=0,label=<
+    <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+        <tr>
+            <td port="1" bgcolor="lightseagreen"></td>
+            <td port="2" bgcolor="lightseagreen"></td>
+        </tr>
+        <tr>
+            <td colspan="2">2</td>
+        </tr>
+    </table>>];
     n3 [shape=none,margin=0,label=<
     <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
         <tr>
@@ -32,22 +42,12 @@ digraph ports {
             <td port="2" bgcolor="lightgrey"></td>
         </tr>
     </table>>];
-    n5 [shape=none,margin=0,label=<
-    <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
-        <tr>
-            <td colspan="2">2</td>
-        </tr>
-        <tr>
-            <td port="1" bgcolor="beige"></td>
-            <td port="2" bgcolor="beige"></td>
-        </tr>
-    </table>>];
     n0:1 -> n1:1 [arrowhead=normal,color=lightseagreen;weight=10;];
-    n1:2 -> n0:2 [arrowhead=normal,color=lightseagreen;weight=10];
+    n1:2 -> n2:1 [arrowhead=normal,color=lightseagreen;weight=10];
+    n2:2 -> n0:2 [arrowhead=normal,color=lightseagreen;weight=10];
+
     n3:1:s -> n3:2:s [arrowhead=normal,color=lightgrey;weight=10];
     n3:2:s -> n3:1:s [arrowhead=normal,color=lightgrey;weight=10];
-    n5:1:s -> n5:2:s [arrowhead=normal,color=beige;weight=10];
-    n5:2:s -> n5:1:s [arrowhead=normal,color=beige;weight=10];
-label = "When user deleting window No.2, instead of removing and delocate,
-2bwm unlink it from all three paths and link it to recycle-path.";
+label = "When adding new window, 2bwm recycle a node from recycle-path
+and link it to current workspace-path";
 }

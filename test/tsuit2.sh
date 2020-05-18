@@ -1,15 +1,12 @@
 2bwm.substitute()
 {
     local reslist devlist libdir includedir bindir cmd i perl_version \
-    tmpbindir vendor_perl \
+    tmpbindir outputdir vendor_perl \
     cmdlist='dirname basename cat ls mv sudo cp chmod ln chown rm touch
-    head mkdir perl mktemp shred egrep sed less date env bash'
+    head mkdir perl mktemp shred egrep sed less date env bash xdotool sleep
+    gtk-demo figlet seq magick import urxvt convert display xsetroot'
 
     declare -A Devlist=(
-        [xdotool]=xdotool
-        [sleep]=sleep
-        [gtk-demo]=gtk-demo
-        [makepkg]=makepkg
     )
     cmdlist="${Devlist[@]} $cmdlist"
     for cmd in $cmdlist;do
@@ -39,61 +36,118 @@
     includedir=/usr/local/include/
     bindir=/usr/local/bin/
     tmpbindir=/var/tmp/
+    outputdir=/var/tmp/2bwm/
+    workspace=7
     \builtin source <($cat<<-SUB
 
-2bwm.fun2script()
-{
-    local usage="[fun][opt user:group][opt u=X,g=Y,o=Z]"
-    local fun=\${1:?\$usage}
-    local usrgrp=\${2:-"\$USER:users"}
-    local perm=\${3:-'ug=rx,o='}
-    local arg='\$@'
-    local script="$bindir/\${fun}"
-    \builtin declare -F \$fun >/dev/null ||\
-    { printf "%s\n" "\$FUNCNAME: \$fun not defined."; return; }
-    local tmpfile=\$($mktemp)
-    $sudo $rm -f \${script}
-    $cat <<-BASHFUN2SCRIPT > \${tmpfile}
-#!$env $bash
-\$(\builtin declare -f \${fun})
-\${fun} \${arg}
-BASHFUN2SCRIPT
-    $sudo $mv \${tmpfile} \${script}
-    $sudo $chmod \${perm} \${script}
-    $sudo $chown \${usrgrp} \${script}
-}
 2bwm.verify()
 {
-    # These test cases should no be executed from a terminal.
-    # They will occupy workspace 1 and 2.
+    \builtin \trap "2bwm.verify.delocate" SIGHUP SIGTERM SIGINT
     declare -a Tests=(
-    2bwm.verify1   
+        2bwm.verify1
     )
+    declare -a Tfuns=(
+        2bwm.record
+        2bwm.verify.delocate
+        2bwm.convert.multi-image
+        2bwm.renamebytime
+        2bwm.setrootwindow
+    )
+    2bwm.setrootwindow()
+    {
+        local text=\${1}
+        local tmpfile=/tmp/\${RANDOM}
+        if [[ -z \${text} ]];then
+            $xsetroot -default
+            return
+        fi
+        \builtin printf "text 15,15 \"" > \${tmpfile}
+        $figlet -f block \${text} >> \${tmpfile}
+        \builtin printf "\"" >> \${tmpfile}
+        $convert -size 160x160 xc:black -fill white -draw "@\${tmpfile}" \${tmpfile}.png
+        $display -window root \${tmpfile}.png
+        $rm -f \${tmpfile} \${tmpfile}.png
+    }
+    2bwm.verify.delocate()
+    {
+        \builtin unset -f \${Tests[@]}
+        \builtin unset -f \${Tfuns[@]}
+        \builtin unset Tests Tfuns
+        \builtin \trap - SIGHUP SIGTERM SIGINT
+        set +o xtrace
+    }
+    2bwm.convert.multi-image()
+    {
+        local dir=\${1:?[input dir][output gif image]}
+        local output=\${2:?[output gif image]}
+        [[ -d \${dir} ]] || return
+        (
+            \builtin cd \${dir}
+            $convert -delay 100 \$($ls -1 --time=birth --reverse) \${output} 
+        )
+    }
+    2bwm.renamebytime()
+    {
+        local i suffix j=0 dir=\${1:?[dir with image files]}
+        [[ -d \${dir} ]] || return
+        (
+            \builtin cd \${dir}
+            for i in \$($ls -1 --time=birth --reverse);do
+                suffix=\${i##*.}
+                $mv -f \${i} "\$((j++)).\${suffix}" 
+            done
+        )    
+    }
+    2bwm.record()
+    {
+        $xdotool \${@}
+        $import -colorspace gray -crop "800x600+1520+780" -window root \
+        -screen ${outputdir}/\${RANDOM}\${RANDOM}.jpg 
+    }
     2bwm.verify1()
     {
-        # 
-        $sleep 1
-        $xdotool key super+1
-        $sleep 1
-        $xdotool key super+ctrl+8
-        $sleep 1
-        $xdotool key super+p
-        $sleep 1
+        local i timer='0.3' total=6 outputimage="/tmp/\${RANDOM}.png"
+        $xdotool sleep 1 key super+${workspace}
+        2bwm.setrootwindow ${workspace}
+        $mkdir -p ${outputdir}
+        $rm -f ${outputdir}/*
+        
+        for i in \$($seq \${total});do
+            $xdotool sleep \${timer} key super+Return
+            $xdotool sleep \${timer} key super+Ctrl+8
+            $xdotool sleep \${timer} key super+space
+            $xdotool sleep \${timer} key super+y
+            $xdotool sleep \${timer} type "PS1=''"
+            $xdotool key --clearmodifiers --delay 0 Return Ctrl+l 
+           $xdotool sleep \${timer} type --clearmodifiers "$figlet -f block \$'\n'\${i}"
+            $xdotool key --delay 0 Return
+            2bwm.record sleep \${timer} key super+k
+        done
+        2bwm.record sleep \${timer} key super+s
+        2bwm.record sleep \${timer} key super+j
+        2bwm.record sleep \${timer} key super+ctrl+Tab   
+        2bwm.record sleep \${timer} key super+j super+j
+        2bwm.record sleep \${timer} key super+Tab
+        2bwm.record sleep \${timer} key super+j
+        2bwm.record sleep \${timer} key super+ctrl+Tab   
+        2bwm.record sleep \${timer} key super+j super+j
+
+        2bwm.record sleep \${timer} key super+s
+        2bwm.record sleep \${timer} key super+s
+        2bwm.record sleep \${timer} key super+Tab
+        2bwm.record sleep \${timer} key super+s
+        2bwm.record sleep \${timer} key super+s
+
+        for i in \$($seq \${total});do
+            2bwm.record sleep \${timer} key super+p
+        done
+        2bwm.setrootwindow
     }
-    local fun
-    set -o xtrace
-    for fun in \${Tests[@]};do
-    $cat <<-2BWMVERIFY > ${tmpbindir}/\${fun}
-#!$env $bash
-\$(\builtin declare -f \${fun})
-\${fun} '\$@'
-2BWMVERIFY
-    \builtin unset -f \${fun}
-    $chmod u=rwx ${tmpbindir}/\${fun}
-    ${tmpbindir}/\${fun}
-    $rm -f ${tmpbindir}/\${fun}
-    done
-    set +o xtrace
+    \${Tests[@]}
+    2bwm.renamebytime ${outputdir}
+#    set -o xtrace
+    2bwm.convert.multi-image ${outputdir} /tmp/tsuit2.gif
+    2bwm.verify.delocate
 }
 SUB
 )

@@ -2,7 +2,7 @@
 
 ## 2bwm:
 A fast floating Window Manager using XCB. 
-This repo is based on a fork from ![2bwm](https://github.com/venam/2bwm).
+This repo is based on a fork from [2bwm](https://github.com/venam/2bwm).
 With a new data structure, more features have been developed.
 
 ## New Features:
@@ -33,18 +33,25 @@ xcb-util-keysyms
 # build archlinux package
 > 2bwm.build
 ```
-## For developers
-![delete window 1](misc/data.png?raw=true "")
+## Data structure
+![delete window 1](misc/data1.png?raw=true "")
 ![delete window 2](misc/data2.png?raw=true "")
+![add window](misc/data3.png?raw=true "")
 
+## Testing
+The test scripts inside test folder are a form of blackbox testing that simulate the behaviour of keyboard and mouse activities.
 The purpose of test cases are for verifying each existing features and should be executed and passed.
 Each pull request with new features should come together with new test cases. 
 ```
+# Predefine which workspace will be occupied for test cases
+by editing file test/tsuitX.sh.
+ws_alpha=[0-9]
 # Install test script.
-> 2bwm.fun2script 2bwm.verify
-# Execute 2bwm.verify from a application launcher e.g: [dmenu] [rofi]
-# Test cases will occupy first and second workspaces on your display.
+> 2bwm.testinstall test/tsuit1.sh
+# Execute 2bwm.verify using keyboard: [Super + Shift + v]
 ```
+You may also optionally using [stimy](https://github.com/netcrop/stimy) to generate run-time call-graph as a tool for the source code level whitebox testing.  
+
 ## Releases:
 **arch** is the latest developing **branch**.
 each **release** tag will be created from this **branch**.
