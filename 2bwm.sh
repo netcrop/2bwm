@@ -3,7 +3,7 @@
     local reslist devlist libdir includedir bindir cmd i perl_version \
     tmpbindir vendor_perl \
     cmdlist='dirname basename cat ls mv sudo cp chmod ln chown rm touch
-    head mkdir perl mktemp shred egrep sed less date make env bash'
+    head mkdir perl mktemp shred egrep sed less date make env bash realpath'
 
     declare -A Devlist=(
         [makepkg]=makepkg
@@ -99,9 +99,12 @@ DWMEXCLUDE
 }
 2bwm.make()
 {
-    $cp config.h src/
-    ( \builtin \cd src/ &&\
-    $make clean && $make)
+    [[ -f "\$($realpath config.h)" ]] && {
+        $cp -f src/config.h src/.config.h
+        $cp -f config.h src/
+    }
+    ( \builtin \cd src/ && $make clean && $make )
+    [[ -f src/.config.h ]] && $mv src/.config.h src/config.h
 }
 2bwm.install()
 {
