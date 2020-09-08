@@ -54,8 +54,8 @@ static const bool inverted_colors = true;
  *1) Full borderwidth    2) Magnet border size
  *3) Resize border size
  */
-static const uint8_t borders[] = {3,5,5,4};
-
+//static const uint8_t borders[] = {3,5,5,4};
+static const uint8_t borders[] = {1,1,1,1};
 /* Windows that won't have a border.
  * It uses substring comparison with what is found in the WM_NAME
  * attribute of the window. You can test this using `xprop WM_NAME`
@@ -63,9 +63,8 @@ static const uint8_t borders[] = {3,5,5,4};
 #define LOOK_INTO "WM_NAME"
 static const char *ignore_names[] = {"bar", "xclock"};
 ///--Menus and Programs---//
-static const char *menucmd[] = { "/usr/local/bin/menu", NULL };
-static const char *testcmd[] = { "/usr/local/bin/2bwm.verify", NULL };
-static const char *termcmd[] = { "/bin/urxvt","-b","40","+sb","-lsp","8","-g","90x40+1400+300", NULL };
+//static const char *testcmd[] = { "/usr/local/bin/2bwm.verify", NULL };
+static const char *termcmd[] = { "/usr/local/bin/urxvt", NULL };
 ///--Custom foo---///
 static void halfandcentered(const Arg *arg)
 {
@@ -210,9 +209,8 @@ static key keys[] = {
 {  MOD |SHIFT,        XK_Left,       cursor_move,       {.i=TWOBWM_CURSOR_LEFT}},
 // Start programs
 {  MOD ,              XK_Return,     start,             {.com = termcmd}},
-{  MOD |SHIFT,        XK_v,          start,             {.com = testcmd}},
+//{  MOD |SHIFT,        XK_v,          start,             {.com = testcmd}},
 {  MOD ,              XK_w,          start,             {.com = termcmd}},
-{  MOD ,              XK_m,          start,             {.com = menucmd}},
 {  MOD ,              XK_o,          selectwindows,     {.i=TWOBWM_SELECT}},
 {  MOD |SHIFT,        XK_o,          selectallwindows,     {.i=TWOBWM_SELECT_ALL}},
 {  MOD ,              XK_i,          hidewin,				{}},
@@ -235,7 +233,6 @@ static key keys[] = {
 static Button buttons[] = {
     {  MOD        ,XCB_BUTTON_INDEX_1,     mousemotion,   {.i=TWOBWM_MOVE}, false},
     {  MOD        ,XCB_BUTTON_INDEX_3,     mousemotion,   {.i=TWOBWM_RESIZE}, false},
-    {  0          ,XCB_BUTTON_INDEX_3,     start,         {.com = menucmd}, true},
     {  MOD|SHIFT,  XCB_BUTTON_INDEX_1,     changeworkspace, {.i=0}, false},
     {  MOD|SHIFT,  XCB_BUTTON_INDEX_3,     changeworkspace, {.i=1}, false},
     {  MOD|ALT,    XCB_BUTTON_INDEX_1,     changescreenwin,    {.i=1}, false},

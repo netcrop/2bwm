@@ -24,12 +24,12 @@
     [[ -z $reslist ]] ||\
     { 
         \builtin printf "%s\n" \
-        "$FUNCNAME says: ( $reslist ) These Required Commands are missing."
+        "$FUNCNAME Require: $reslist"
         return
     }
     [[ -z $devlist ]] ||\
     \builtin printf "%s\n" \
-    "$FUNCNAME says: ( $devlist ) These Optional Commands for further development."
+    "$FUNCNAME Optional: $devlist"
 
     perl_version="$($perl -e 'print $^V')"
     vendor_perl=/usr/share/perl5/vendor_perl/
@@ -99,9 +99,10 @@ DWMEXCLUDE
 }
 2bwm.make()
 {
-    [[ -f "\$($realpath config.h)" ]] && {
+    local config=\${1:?[vm/hostname/2bwm.conf]}
+    [[ -f "\${config}" ]] && {
         $cp -f src/config.h src/.config.h
-        $cp -f config.h src/
+        $cp -f "\${config}" src/
     }
     ( \builtin \cd src/ && $make clean && $make )
     [[ -f src/.config.h ]] && $mv src/.config.h src/config.h
@@ -122,14 +123,20 @@ DWMEXCLUDE
 2bwm.build()
 {
     local bwmdate="\$($date +"%Y-%m-%d")"
+    local config=\${1:?[vm/hostname/2bwm.conf]}
     $chmod u=rw src/path.h
     $sed -i "s;debugging 1;debugging 0;" src/path.h
     $cp src/2bwm.1 src/2bwm.man
     $sed -i "s;2BWMDATE;\${bwmdate};" src/2bwm.1
-    2bwm.make
+    [[ -f "\${config}" ]] && {
+        $cp -f src/config.h src/.config.h
+        $cp -f "\${config}" src/config.h
+    }
+    ( \builtin \cd src/ && $make clean && $make )
     $makepkg --syncdeps --force --noextract --noprepare
-    $sed -i "s;debugging 0;debugging 1;" src/path.h
     $mv src/2bwm.man src/2bwm.1
+    $sed -i "s;debugging 0;debugging 1;" src/path.h
+    [[ -f src/.config.h ]] && $mv src/.config.h src/config.h
 }
 2bwm.clear()
 {

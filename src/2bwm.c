@@ -2908,8 +2908,9 @@ run(void)
         }
         if (!(ev = xcb_wait_for_event(conn)))
             continue;
-        if(ev->response_type==randrbase + XCB_RANDR_SCREEN_CHANGE_NOTIFY)
-            changerandr();
+// auto change monitor don't work properly.
+//        if(ev->response_type == XCB_RANDR_SCREEN_CHANGE_NOTIFY)
+//            changerandr();
         if (events[ev->response_type & ~0x80])
             events[ev->response_type & ~0x80](ev);
         if(top_win!=0)
