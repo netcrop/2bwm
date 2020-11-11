@@ -104,13 +104,14 @@ DWMEXCLUDE
         $cp -f src/config.h src/.config.h
         $cp -f "\${config}" src/
     }
-    ( \builtin \cd src/ && $make clean && $make )
+    ( \builtin \cd src/ && $make clean && $make || return 1)
     [[ -f src/.config.h ]] && $mv src/.config.h src/config.h
 }
 2bwm.install()
 {
     local bwmdate="\$($date +"%Y-%m-%d")"
-    2bwm.make
+    local config=\${1:?[vm/hostname/2bwm.conf]}
+    2bwm.make \$config
     [[ \$? == 0 ]] || return
     $cp src/2bwm.1 src/2bwm.man
     $sed -i "s;2BWMDATE;\${bwmdate};" src/2bwm.1
@@ -146,6 +147,7 @@ DWMEXCLUDE
     $rm -f 2bwm
     $rm -f *.o
     $rm -f hidden
+    $rm -f src/2bwm.conf
     ( \builtin \cd src/ && make clean )
 }
 SUB

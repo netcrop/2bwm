@@ -117,6 +117,7 @@ static void check_namewin(client_t *);
 static void changescreenwin(const Arg *);
 
 /* Workspace Manipulation */
+static void posttoworkspace(const Arg *);
 static void sendtoworkspace(const Arg *);
 static void sendtonextworkspace(const Arg *);
 static void sendtoprevworkspace(const Arg *);

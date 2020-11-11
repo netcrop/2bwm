@@ -424,6 +424,15 @@ unkillablewindow(node_t* node)
     setborderswin(client,true);
 }
 void
+posttoworkspace(const Arg *arg)
+{
+    sendtoworkspace(arg);
+    changeworkspace(arg);
+    selectallwindows(arg);
+    Arg arg1 = { .i=TWOBWM_TELEPORT_CENTER_X }; 
+    teleportwin(&arg1);
+}
+void
 sendtoworkspace(const Arg *arg)
 {
     client_t *client = NULL;
@@ -2188,6 +2197,9 @@ windowsize(const Arg *arg)
 {
     node_t *tail,*node = path[curpi];
     client_t *cl = NULL;
+    Arg arg1 = { .i=TWOBWM_TELEPORT_TOP};
+    Arg arg2 = { .i=TWOBWM_TELEPORT_CENTER_X};
+    Arg arg3 = { .i=TWOBWM_TELEPORT_CENTER_Y};
     int16_t pointx, pointy, mon_x, mon_y, temp = 0;
     uint16_t mon_width, mon_height;
     if(node && !next(node,selpi))
@@ -2198,10 +2210,13 @@ windowsize(const Arg *arg)
         cl = node->data;
         if (cl->maxed)
             continue;
+        teleportwin_helper(&arg1,cl);
         getmonsize(true, &mon_x, &mon_y, &mon_width, &mon_height,cl);
         cl->width = windowwidth[arg->i];
         cl->height = windowheight[arg->i];
         resizelimwin(cl);
+        teleportwin_helper(&arg2,cl);
+        teleportwin_helper(&arg3,cl);
         setborderswin(cl,true);
     }
     if(!(node = path[curpi]))
