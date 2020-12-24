@@ -1,42 +1,38 @@
 2bwm.substitute()
 {
-    local reslist devlist libdir includedir bindir cmd i perl_version \
-    tmpbindir vendor_perl \
-    cmdlist='dirname basename cat ls mv sudo cp chmod ln chown rm touch
-    head mkdir perl mktemp shred egrep sed less date make env bash realpath'
-
-    declare -A Devlist=(
-        [makepkg]=makepkg
-        [dot]=dot
-    )
-    cmdlist="${Devlist[@]} $cmdlist"
-    for cmd in $cmdlist;do
-        i=($(\builtin type -afp $cmd 2>/dev/null))
-        if [[ -z $i ]];then
-            if [[ -z ${Devlist[$cmd]} ]];then
-                reslist+=" $cmd"
-            else
-                devlist+=" $cmd"
-            fi
-        fi
+    local cmdlist reslist devlist pkglist cmd i pkg
+    cmdlist=(dirname basename cat ls mv sudo cp chmod ln chown rm touch
+    head mkdir perl mktemp shred egrep sed less date make env bash realpath)
+    devlist=(makepkg dot)
+    pkglist=(xcb-util xcb-util-wm xcb-util-xrm xcb-util-keysyms)
+    for cmd in ${cmdlist[@]};do
+        i=($(\builtin type -afp $cmd))
+        [[ -n $i ]] || {
+            \builtin printf "%s\n" "$FUNCNAME Require: $cmd"
+            return
+        }
         \builtin eval "local ${cmd//-/_}=${i:-:}"
     done
-    [[ -z $reslist ]] ||\
-    { 
-        \builtin printf "%s\n" \
-        "$FUNCNAME Require: $reslist"
+    for pkg in ${pkglist[@]};do
+        pacman -Qi $pkg >/dev/null 2>&1 && continue
+        \builtin printf "%s\n" "$FUNCNAME Require: $pkg"
         return
-    }
-    [[ -z $devlist ]] ||\
-    \builtin printf "%s\n" \
-    "$FUNCNAME Optional: $devlist"
+    done
+    for cmd in ${devlist[@]};do
+        i=($(\builtin type -afp $cmd))
+        [[ -n $i ]] || {
+            \builtin printf "%s\n" "$FUNCNAME Optional: $cmd"
+            continue
+        }
+        \builtin eval "local ${cmd//-/_}=${i:-:}"
+    done
 
-    perl_version="$($perl -e 'print $^V')"
-    vendor_perl=/usr/share/perl5/vendor_perl/
-    libdir=/usr/local/lib
-    includedir=/usr/local/include/
-    bindir=/usr/local/bin/
-    tmpbindir=/var/tmp/
+    local perl_version="$($perl -e 'print $^V')"
+    local vendor_perl=/usr/share/perl5/vendor_perl/
+    local libdir=/usr/local/lib
+    local includedir=/usr/local/include/
+    local bindir=/usr/local/bin/
+    local tmpbindir=/var/tmp/
     \builtin source <($cat<<-SUB
 
 2bwm.testinstall()
@@ -76,7 +72,7 @@ BASHFUN2SCRIPT
 2bwm.exclude()
 {
     $cat<<-DWMEXCLUDE>.git/info/exclude
-pkg
+pkg/
 master
 origin
 configure
@@ -100,12 +96,16 @@ DWMEXCLUDE
 2bwm.make()
 {
     local config=\${1:?[vm/hostname/2bwm.conf]}
-    [[ -f "\${config}" ]] && {
-        $cp -f src/config.h src/.config.h
-        $cp -f "\${config}" src/
+    local name=\${config##*/}
+    [[ -f "\${config}" ]] || {
+        \builtin echo "invalid \${config}"
+        return 1
     }
+    $cp -f src/config.h src/.config.h
+    $cp -f "\${config}" src/
     ( \builtin \cd src/ && $make clean && $make || return 1)
     [[ -f src/.config.h ]] && $mv src/.config.h src/config.h
+    $rm -f src/\${name}
 }
 2bwm.install()
 {
@@ -128,16 +128,11 @@ DWMEXCLUDE
     $chmod u=rw src/path.h
     $sed -i "s;debugging 1;debugging 0;" src/path.h
     $cp src/2bwm.1 src/2bwm.man
-    $sed -i "s;2BWMDATE;\${bwmdate};" src/2bwm.1
-    [[ -f "\${config}" ]] && {
-        $cp -f src/config.h src/.config.h
-        $cp -f "\${config}" src/config.h
-    }
-    ( \builtin \cd src/ && $make clean && $make )
+    2bwm.make \${config} || return 1
     $makepkg --syncdeps --force --noextract --noprepare
     $mv src/2bwm.man src/2bwm.1
     $sed -i "s;debugging 0;debugging 1;" src/path.h
-    [[ -f src/.config.h ]] && $mv src/.config.h src/config.h
+    [[ -d pkg ]] && $mv 2bwm-*.tar.zst pkg/
 }
 2bwm.clear()
 {

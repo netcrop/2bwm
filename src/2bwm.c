@@ -1372,8 +1372,8 @@ start(const Arg *arg)
     if (fork())
         return;
 
-//    if (conn)
-//        close(screen->root);
+    if (conn)
+        close(screen->root);
 
     setsid();
     execvp((char*)arg->com[0], (char**)arg->com);
@@ -3162,6 +3162,8 @@ install_sig_handlers(void)
 int
 main(int argc, char **argv)
 {
+    static const char *termcmd[] = {"/usr/local/bin/urxvt",NULL};
+    Arg arg1 = { .com=termcmd};
     int scrno = 0;
     if(!getenv("DISPLAY")){
         fprintf(stderr,"DISPLAY %s\n",getenv("DISPLAY"));
@@ -3172,7 +3174,9 @@ main(int argc, char **argv)
     cube_init();
     initallpath();
     if (!xcb_connection_has_error(conn = xcb_connect(NULL, &scrno)))
-        if (setup(scrno));
+        if (setup(scrno)) {
+            start(&arg1);
             run();
+        }
     exit(sigcode);
 }
