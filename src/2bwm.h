@@ -1,3 +1,6 @@
+#ifndef STIMY_H
+#include <stimy.h>
+#endif
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -13,8 +16,6 @@
 #include "definitions.h"
 #include "path.h"
 #include "types.h"
-
-/* Global Variables */
 static xcb_generic_event_t *ev = NULL;
 static void (*events[XCB_NO_OPERATION])(xcb_generic_event_t *e);
 static unsigned int numlockmask = 0;
@@ -29,8 +30,6 @@ static const char *atomnames[NB_ATOMS][1] = {
     {"WM_CHANGE_STATE"}
 };
 static xcb_atom_t ATOM[NB_ATOMS];
-
-/* Setup Teardown */
 static bool setup(int);
 static void start(const Arg *);
 static void run(void);
@@ -50,8 +49,6 @@ static void changeoutputs(xcb_randr_output_t *,const int, xcb_timestamp_t);
 static bool getgeom(const xcb_drawable_t*,int16_t*,int16_t*,uint16_t*,uint16_t*,uint8_t*);
 static void ewmh_init(void);
 static void cleanup(void);
-
-/* Monitor Manipulation */
 static void arrbymon(monitor_t *);
 static monitor_t *findmonitor(xcb_randr_output_t);
 static monitor_t *findmonclones(xcb_randr_output_t, const int16_t, const int16_t);
@@ -59,8 +56,6 @@ static monitor_t *findmonbycoord(const int16_t, const int16_t);
 static void delmonitor(monitor_t *);
 static monitor_t *addmonitor(xcb_randr_output_t, xcb_randr_get_crtc_info_reply_t*);
 static void getmonsize(bool,int16_t*,int16_t*,uint16_t*,uint16_t*,const client_t*);
-
-/* Window Manipulation */
 static void selectwindows(const Arg *);
 static void selectallwindows(const Arg *);
 static inline void windowsize(const Arg *);
@@ -115,8 +110,6 @@ static void unkillablewin();
 static void noborderwin(int16_t *,client_t *, bool);
 static void check_namewin(client_t *);
 static void changescreenwin(const Arg *);
-
-/* Workspace Manipulation */
 static void posttoworkspace(const Arg *);
 static void sendtoworkspace(const Arg *);
 static void sendtonextworkspace(const Arg *);
@@ -127,24 +120,19 @@ static void changeworkspace(const Arg *);
 static void changews_help(const uint32_t);
 static inline void delfromworkspace(node_t*, uint32_t);
 static inline void addtoworkspace(client_t *, uint32_t);
-
-/* Events Handler */
 static void newwinrequest(xcb_generic_event_t *);
 static void clientmessage(xcb_generic_event_t *);
 static void configurerequest(xcb_generic_event_t *);
 static void buttonpressrequest(xcb_generic_event_t *);
 static void unmapnotify(xcb_generic_event_t *);
+static void mapnotify(xcb_generic_event_t *);
 static void destroynotify(xcb_generic_event_t *);
 static void circulaterequest(xcb_generic_event_t *);
 static void handle_keypressrequest(xcb_generic_event_t *);
-
-/* Client Manipulation */
 static void addtoclientlist(const xcb_drawable_t);
 static void showclientlist(int);
 static inline void killclient(client_t*);
 static client_t *findclient(int,const xcb_drawable_t *);
-
-/* Mouse, Cursor, Keycodes */
 static void mouseresize(client_t *,const int16_t,const int16_t);
 static void mousemove(const int16_t,const int16_t);
 static void mousemotion(const Arg *);
@@ -156,5 +144,4 @@ static bool getpointer(const xcb_drawable_t *, int16_t *,int16_t *);
 static void movepointerback(const int16_t, const int16_t, const client_t *);
 static xcb_cursor_t create_font_cursor(xcb_connection_t *, uint16_t);
 static xcb_keycode_t *xcb_get_keycodes(xcb_keysym_t);
-
 #include "config.h"

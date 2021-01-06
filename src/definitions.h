@@ -1,14 +1,16 @@
+#ifndef STIMY_H
+#include <stimy.h>
+#endif
 #define WORKSPACES      10
 #define BUTTONMASK      XCB_EVENT_MASK_BUTTON_PRESS|XCB_EVENT_MASK_BUTTON_RELEASE
-#define NET_WM_FIXED    0xffffffff  // WM hint: window is fixed on all workspaces.
-#define TWOBWM_NOWS     0xfffffffe  // we didn't get any window hint at all.
+#define NET_WM_FIXED    0xffffffff
+#define TWOBWM_NOWS     0xfffffffe
 #define LENGTH(x)       (sizeof(x)/sizeof(*x))
 #define MIN(X, Y)       ((X) < (Y) ? (X) : (Y))
 #define CLEANMASK(mask) (mask & ~(numlockmask|XCB_MOD_MASK_LOCK))
-#define CONTROL         XCB_MOD_MASK_CONTROL /* Control key */
-#define ALT             XCB_MOD_MASK_1       /* ALT key */
-#define SHIFT           XCB_MOD_MASK_SHIFT   /* Shift key */
-
+#define CONTROL         XCB_MOD_MASK_CONTROL
+#define ALT             XCB_MOD_MASK_1
+#define SHIFT           XCB_MOD_MASK_SHIFT
 enum {TWOBWM_MOVE,TWOBWM_RESIZE};
 enum {TWOBWM_FOCUS_NEXT, TWOBWM_FOCUS_PREVIOUS, TWOBWM_FOCUS_LOCATION};
 enum {TWOBWM_SELECT, TWOBWM_SELECT_ALL};

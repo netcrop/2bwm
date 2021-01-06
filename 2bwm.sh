@@ -102,10 +102,9 @@ DWMEXCLUDE
         return 1
     }
     $cp -f src/config.h src/.config.h
-    $cp -f "\${config}" src/
+    $cp -f "\${config}" src/config.h
     ( \builtin \cd src/ && $make clean && $make || return 1)
     [[ -f src/.config.h ]] && $mv src/.config.h src/config.h
-    $rm -f src/\${name}
 }
 2bwm.install()
 {
@@ -130,9 +129,9 @@ DWMEXCLUDE
     $cp src/2bwm.1 src/2bwm.man
     2bwm.make \${config} || return 1
     $makepkg --syncdeps --force --noextract --noprepare
-    $mv src/2bwm.man src/2bwm.1
+    $mv -f src/2bwm.man src/2bwm.1
     $sed -i "s;debugging 0;debugging 1;" src/path.h
-    [[ -d pkg ]] && $mv 2bwm-*.tar.zst pkg/
+    [[ -d pkg ]] && $mv -f 2bwm-*.tar.zst pkg/
 }
 2bwm.clear()
 {

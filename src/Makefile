@@ -15,7 +15,7 @@ DEBUG = -ggdb3 -g3
 CFLAGS+= -Os -s -I${X11_INCLUDE} \
 		-DTWOBWM_PATH=\"${TWOBWM_PATH}\" 
 
-LDFLAGS+=-L${PREFIX}/${LIB_SUFFIX} -lxcb -lxcb-randr -lxcb-keysyms \
+LDFLAGS+= /usr/local/lib/libstimy.so -L${PREFIX}/${LIB_SUFFIX} -lxcb -lxcb-randr -lxcb-keysyms \
 		 -lxcb-icccm -lxcb-ewmh -lxcb-xrm
 TARGETS=2bwm 
 OBJS=2bwm.o
